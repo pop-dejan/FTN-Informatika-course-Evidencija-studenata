@@ -1,11 +1,7 @@
 var studenti = [];
 var aktivanStudent = null;
 function promeniAktivnog(selekt) {
-    //selekt.value nam sadrzi jmbg jednog studenta
-    //na osnovu tog jmbga mi filtriramo niz studenti kako bi dobili bas tog studenta koga
-    //smo selektovali sa selekt poljem (njegov jmbg)
-    //posto nam filter vraca niz a nama treba konkretan objekat iz niza kojeg nam vraca filter
-    //taj objekat izdvajamo sa [0] (indeksiramo prvi element niza)
+    
     aktivanStudent = studenti.filter(function (elem) { return elem.jmbg == Number(selekt.value); })[0];
     aktivanStudent.refreshPredmeti();
 }
@@ -21,10 +17,10 @@ var Student = /** @class */ (function () {
         this._ime = ime;
         this._prezime = prezime;
         this._jmbg = jmbg;
-        this._predmeti = []; //Inicajizujemo niz predmeta na prazan niz kako bi kasnije mogli da radimo this._predmeti.push(...)
+        this._predmeti = []; 
     }
     Object.defineProperty(Student.prototype, "ime", {
-        //Geter i seteri prema tekstu zadatka
+        
         get: function () {
             return this._ime;
         },
@@ -62,11 +58,11 @@ var Student = /** @class */ (function () {
         configurable: true
     });
     Student.prototype.dodajPredmet = function (predmet) {
-        this._predmeti.push(predmet); //Novi predmet dodajemo u niz predmeta
-        this.refreshPredmeti(); //Pozivamo refresh kako bi osvezili html stranicu
+        this._predmeti.push(predmet); 
+        this.refreshPredmeti(); 
     };
     Student.prototype.refreshPredmeti = function () {
-        var predmetiOut = document.getElementById("predmeti"); //U div sa IDjem predmeti upisujemo sve polozene predmete
+        var predmetiOut = document.getElementById("predmeti"); 
         var outString = "";
         for (var i = 0; i < this._predmeti.length; i++) {
             outString += "Predmet: " + this._predmeti[i].naziv + " <br/>Ocena: " + this._predmeti[i].ocena + " <br/><br/>";
@@ -78,27 +74,23 @@ var Student = /** @class */ (function () {
     };
     return Student;
 }());
-//Sve reakcije na klik dugmica ce se raditi nad aktivnim studentom (studentom koji je trenutno selektovan u select polju)
+
 function wireEvents() {
-    //Arrow funkcije:
-    //Bez parametara zagrade obavezne:  () => telo
-    //Sa jednim parametrom zagrade nisu obavezne: x => telo
-    //Sa vise parametara zagrade su obavezne: (p1,p2,...,pn) => telo
-    //Klik na dugme sa idom dodajPredmet
+    
     document.getElementById("dodajPredmet").addEventListener("click", function () {
-        var naziv = document.getElementById("naziv"); //Kao u calculatoru preuzimamo input elemente
+        var naziv = document.getElementById("naziv"); 
         var ocena = document.getElementById("ocena");
-        var p = new Predmet(naziv.value, Number(ocena.value)); //Pravimo novi objekat tipa Predmet sa vrednostima iz input elemenata
-        aktivanStudent.dodajPredmet(p); //Dodajemo novi predmet u niz predmeta
+        var p = new Predmet(naziv.value, Number(ocena.value)); 
+        aktivanStudent.dodajPredmet(p); 
     });
-    //Klik na dugme sa idom izracunajProsecnuOcenu
+    
     document.getElementById("izracunajProsecnuOcenu").addEventListener("click", function () {
         var prosekOut = document.getElementById("prosecnaOcena");
-        //Ispis prosecne ocene vrsimo u div sa idom prosecnaOcena po format sa slike
+      
         prosekOut.innerHTML = "Prosecna ocena za studenta: " + aktivanStudent.ime + " " + aktivanStudent.prezime + " je " + aktivanStudent.getProsek();
     });
 }
-//Kod za inicijalizaciju, sacekamo da se dom ucita i onda popunimo selekt polje sa studentima
+
 window.onload = function () {
     initStudenti.forEach(function (elem) {
         var s = new Student(elem.ime, elem.prezime, Number(elem.jmbg));
@@ -170,22 +162,21 @@ var initStudenti = [
     }
 ];
 var QueryString = function () {
-    // This function is anonymous, is executed immediately and 
-    // the return value is assigned to QueryString!
+    
     var query_string = {};
     var query = window.location.search.substring(1);
     var vars = query.split("&");
     for (var i = 0; i < vars.length; i++) {
         var pair = vars[i].split("=");
-        // If first entry with this name
+      
         if (typeof query_string[pair[0]] === "undefined") {
             query_string[pair[0]] = decodeURIComponent(pair[1]);
-            // If second entry with this name
+            
         }
         else if (typeof query_string[pair[0]] === "string") {
             var arr = [query_string[pair[0]], decodeURIComponent(pair[1])];
             query_string[pair[0]] = arr;
-            // If third or later entry with this name
+          
         }
         else {
             query_string[pair[0]].push(decodeURIComponent(pair[1]));
